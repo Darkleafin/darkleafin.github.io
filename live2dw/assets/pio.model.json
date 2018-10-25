@@ -15,13 +15,6 @@
     "motions":{
         "idle":[
             {"file":"motions/Breath1.mtn","fade_in":500,"fade_out":0},
-            {"file":"motions/Breath2.mtn","fade_in":500,"fade_out":0},
-            {"file":"motions/Breath3.mtn","fade_in":500,"fade_out":0},
-            {"file":"motions/Breath4.mtn","fade_in":500,"fade_out":0},
-            {"file":"motions/Breath5.mtn","fade_in":500,"fade_out":0},
-            {"file":"motions/Breath6.mtn","fade_in":500,"fade_out":0},
-            {"file":"motions/Breath7.mtn","fade_in":500,"fade_out":0},
-            {"file":"motions/Breath8.mtn","fade_in":500,"fade_out":0}
 		]
     }
 }
