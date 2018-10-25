@@ -4,6 +4,8 @@
     "model":"moc/pio.moc",
     "textures":[
         "moc/pio.1024/default-costume.png",
+        "moc/pio.1024/pajamas-costume.png",
+        "moc/pio.1024/school-costume.png"
     ],
     "layout":{
         "center_x":0.0,
@@ -12,14 +14,14 @@
     },
     "motions":{
         "idle":[
-            {"file":"motions/Breath1.mtn","fade_in":500,"fade_out":200},
-            {"file":"motions/Breath2.mtn","fade_in":500,"fade_out":200},
-            {"file":"motions/Breath3.mtn","fade_in":500,"fade_out":200},
-            {"file":"motions/Breath4.mtn","fade_in":500,"fade_out":200},
-            {"file":"motions/Breath5.mtn","fade_in":500,"fade_out":200},
-            {"file":"motions/Breath6.mtn","fade_in":500,"fade_out":200},
-            {"file":"motions/Breath7.mtn","fade_in":500,"fade_out":200},
-            {"file":"motions/Breath8.mtn","fade_in":500,"fade_out":200}
+            {"file":"motions/Breath1.mtn","fade_in":500,"fade_out":0},
+            {"file":"motions/Breath2.mtn","fade_in":500,"fade_out":0},
+            {"file":"motions/Breath3.mtn","fade_in":500,"fade_out":0},
+            {"file":"motions/Breath4.mtn","fade_in":500,"fade_out":0},
+            {"file":"motions/Breath5.mtn","fade_in":500,"fade_out":0},
+            {"file":"motions/Breath6.mtn","fade_in":500,"fade_out":0},
+            {"file":"motions/Breath7.mtn","fade_in":500,"fade_out":0},
+            {"file":"motions/Breath8.mtn","fade_in":500,"fade_out":0}
 		]
     }
 }
