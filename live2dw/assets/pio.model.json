@@ -4,8 +4,6 @@
     "model":"moc/pio.moc",
     "textures":[
         "moc/pio.1024/default-costume.png",
-        "moc/pio.1024/pajamas-costume.png",
-        "moc/pio.1024/school-costume.png"
     ],
     "layout":{
         "center_x":0.0,
@@ -22,25 +20,6 @@
             {"file":"motions/Breath6.mtn","fade_in":500,"fade_out":200},
             {"file":"motions/Breath7.mtn","fade_in":500,"fade_out":200},
             {"file":"motions/Breath8.mtn","fade_in":500,"fade_out":200}
-		],
-		"shake":[
-            {"file":"motions/Sukebei1.mtn","fade_in":500,"fade_out":0},
-            {"file":"motions/Sukebei2.mtn","fade_in":500,"fade_out":0},
-            {"file":"motions/Sukebei3.mtn","fade_in":500,"fade_out":0}
-		],
-		"tap_body":[
-            {"file":"motions/TouchDere1.mtn","fade_in":500,"fade_out":0},
-            {"file":"motions/TouchDere2.mtn","fade_in":500,"fade_out":0},
-            {"file":"motions/TouchDere3.mtn","fade_in":500,"fade_out":0},
-            {"file":"motions/TouchDere4.mtn","fade_in":500,"fade_out":0},
-            {"file":"motions/TouchDere5.mtn","fade_in":500,"fade_out":0},
-            {"file":"motions/TouchDere6.mtn","fade_in":500,"fade_out":0},
-            {"file":"motions/Touch1.mtn","fade_in":500,"fade_out":0},
-            {"file":"motions/Touch2.mtn","fade_in":500,"fade_out":0},
-            {"file":"motions/Touch3.mtn","fade_in":500,"fade_out":0},
-            {"file":"motions/Touch4.mtn","fade_in":500,"fade_out":0},
-            {"file":"motions/Touch5.mtn","fade_in":500,"fade_out":0},
-            {"file":"motions/Touch6.mtn","fade_in":500,"fade_out":0}
-        ]
+		]
     }
 }
