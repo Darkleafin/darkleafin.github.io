@@ -1,10 +1,10 @@
 {
     "version":"1.0.0",
-    "model":"moc/model.moc",
+    "model":"moc/pio.moc",
     "textures":[
-        "moc/model.2048/default-costume.png",
-        "moc/model.2048/pajamas-costume.png",
-        "moc/model.2048/school-costume.png"
+        "moc/pio.2048/default-costume.png",
+        "moc/pio.2048/pajamas-costume.png",
+        "moc/pio.2048/school-costume.png"
     ],
     "layout":{
         "center_x":0.0,
@@ -36,12 +36,12 @@
             {"file":"mtn/Sukebei1.mtn"},
             {"file":"mtn/Sukebei2.mtn"},
             {"file":"mtn/Sukebei3.mtn"},
-            {"file":"mtn/Touch Dere1.mtn"},
-            {"file":"mtn/Touch Dere2.mtn"},
-            {"file":"mtn/Touch Dere3.mtn"},
-            {"file":"mtn/Touch Dere4.mtn"},
-            {"file":"mtn/Touch Dere5.mtn"},
-            {"file":"mtn/Touch Dere6.mtn"},
+            {"file":"mtn/TouchDere1.mtn"},
+            {"file":"mtn/TouchDere2.mtn"},
+            {"file":"mtn/TouchDere3.mtn"},
+            {"file":"mtn/TouchDere4.mtn"},
+            {"file":"mtn/TouchDere5.mtn"},
+            {"file":"mtn/TouchDere6.mtn"},
             {"file":"mtn/Touch1.mtn"},
             {"file":"mtn/Touch2.mtn"},
             {"file":"mtn/Touch3.mtn"},
