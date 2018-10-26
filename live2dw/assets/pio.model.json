@@ -14,13 +14,13 @@
     },
     "motions":{
         "idle":[
-            {"file":"mtn/WakeUp.mtn","fade_in":500,"fade_out":200},
-            {"file":"mtn/Breath1.mtn","fade_in":500,"fade_out":200},
-            {"file":"mtn/Breath2.mtn","fade_in":500,"fade_out":200},
-            {"file":"mtn/Breath3.mtn","fade_in":500,"fade_out":200},
-            {"file":"mtn/Breath5.mtn","fade_in":500,"fade_out":200},
-            {"file":"mtn/Breath7.mtn","fade_in":500,"fade_out":200},
-            {"file":"mtn/Breath8.mtn","fade_in":500,"fade_out":200}
+            {"file":"mtn/WakeUp.mtn"},
+            {"file":"mtn/Breath1.mtn"},
+            {"file":"mtn/Breath2.mtn"},
+            {"file":"mtn/Breath3.mtn"},
+            {"file":"mtn/Breath5.mtn"},
+            {"file":"mtn/Breath7.mtn"},
+            {"file":"mtn/Breath8.mtn"}
         ],
         "":[
             {"file":"mtn/Breath1.mtn"},
