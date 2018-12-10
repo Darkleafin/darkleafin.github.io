@@ -116,7 +116,7 @@
 <meta property="og:site_name" content="Darkleaf Land">
 <meta property="og:description" content="§ 1  题意有一个点数为 $n$ 的有向图，每个点出度均为 $1$。 给出每个点的后继 $A_i$ 和点权 $B_i$，保证 $A_i \neq i$ 且 $A_{A_i} \neq i$。 记点 $i$ 的总度数为 $D_i$，并定义 $E_i = \lfloor \frac{B_i}{D_i} \rfloor$，稠密度 $C_i=B_i-D_i*E_i+\sum_{j=1}^{D_i}E_{">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-12-10T13:27:34.463Z">
+<meta property="og:updated_time" content="2018-12-10T23:31:44.340Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="[EZOI][1208NOI模拟赛]Forest">
 <meta name="twitter:description" content="§ 1  题意有一个点数为 $n$ 的有向图，每个点出度均为 $1$。 给出每个点的后继 $A_i$ 和点权 $B_i$，保证 $A_i \neq i$ 且 $A_{A_i} \neq i$。 记点 $i$ 的总度数为 $D_i$，并定义 $E_i = \lfloor \frac{B_i}{D_i} \rfloor$，稠密度 $C_i=B_i-D_i*E_i+\sum_{j=1}^{D_i}E_{">
@@ -373,12 +373,24 @@
                 
               
 
-              <time title="创建时间：2018-12-10 19:45:53 / 修改时间：21:27:34" itemprop="dateCreated datePublished" datetime="2018-12-10T19:45:53+08:00">2018-12-10</time>
+              <time title="创建时间：2018-12-10 19:45:53" itemprop="dateCreated datePublished" datetime="2018-12-10T19:45:53+08:00">2018-12-10</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-12-11 07:31:44" itemprop="dateModified" datetime="2018-12-11T07:31:44+08:00">2018-12-11</time>
               
             
           </span>
@@ -434,7 +446,7 @@
 <p><strong>题目来源：</strong><a href="http://codeforces.com/problemset/problem/643/D" target="_blank" rel="noopener">Codeforces 643D - Bearish Fanpages</a>。</p>
 <hr>
 <h1 id="§-2-分析"><a href="#§-2-分析" class="headerlink" title="§ 2 分析"></a><font face="Consolas"><strong>§ 2 分析</strong></font></h1><p>首先化简得 $C_i=B_i \% D_i+\sum_{j=1}^{D_i}E_{P_j}$。</p>
-<p>考虑操作 $1$，将点 $i$ 的后继从 $A_i$ 改为 $j$，若 $A_i==j$ 则跳过，否则会造成如下影响：</p>
+<p>考虑操作 $1$，将点 $i$ 的后继从 $A_i$ 改为 $j$，若 $A_i==j$ 则跳过，否则考虑改动所造成的影响：</p>
 <ul>
 <li>$A_i$ 的度数减少 $1$，即 $D_{A_i}$ 减去 $1$，导致 $E_{A_i} = \lfloor \frac{B_{A_i}}{D_{A_i}} \rfloor$ 改变。</li>
 <li>$j$ 的度数增加 $1$，即 $D_j$ 加上 $1$，导致 $E_j = \lfloor \frac{B_j}{D_j} \rfloor$ 改变。</li>
