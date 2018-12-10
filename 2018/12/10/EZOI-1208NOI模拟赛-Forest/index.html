@@ -116,7 +116,7 @@
 <meta property="og:site_name" content="Darkleaf Land">
 <meta property="og:description" content="§ 1  题意有一个点数为 $n$ 的有向图，每个点出度均为 $1$。 给出每个点的后继 $A_i$ 和点权 $B_i$，保证 $A_i \neq i$ 且 $A_{A_i} \neq i$。 记点 $i$ 的总度数为 $D_i$，并定义 $E_i = \lfloor \frac{B_i}{D_i} \rfloor$，稠密度 $C_i=B_i-D_i*E_i+\sum_{j=1}^{D_i}E_{">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-12-10T13:18:50.455Z">
+<meta property="og:updated_time" content="2018-12-10T13:23:56.669Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="[EZOI][1208NOI模拟赛]Forest">
 <meta name="twitter:description" content="§ 1  题意有一个点数为 $n$ 的有向图，每个点出度均为 $1$。 给出每个点的后继 $A_i$ 和点权 $B_i$，保证 $A_i \neq i$ 且 $A_{A_i} \neq i$。 记点 $i$ 的总度数为 $D_i$，并定义 $E_i = \lfloor \frac{B_i}{D_i} \rfloor$，稠密度 $C_i=B_i-D_i*E_i+\sum_{j=1}^{D_i}E_{">
@@ -373,7 +373,7 @@
                 
               
 
-              <time title="创建时间：2018-12-10 19:45:53 / 修改时间：21:18:50" itemprop="dateCreated datePublished" datetime="2018-12-10T19:45:53+08:00">2018-12-10</time>
+              <time title="创建时间：2018-12-10 19:45:53 / 修改时间：21:23:56" itemprop="dateCreated datePublished" datetime="2018-12-10T19:45:53+08:00">2018-12-10</time>
             
 
             
@@ -430,14 +430,14 @@
 <li>$2​$ $i​$ ：询问 $i​$ 点的稠密度 $C_i​$。</li>
 <li>$3$ ：询问所有节点中，$C_i$ 的最小值和最大值。</li>
 </ul>
-<p><strong>题目来源：</strong><a href="http://codeforces.com/problemset/problem/643/D" target="_blank" rel="noopener"><codeforces 643d=""> Bearish Fanpages</codeforces></a>。</p>
+<p><strong>题目来源：</strong><a href="http://codeforces.com/problemset/problem/643/D" target="_blank" rel="noopener">Codeforces 643D - Bearish Fanpages</a>。</p>
 <hr>
 <h1 id="§-2-分析"><a href="#§-2-分析" class="headerlink" title="§ 2 分析"></a><font face="Consolas"><strong>§ 2 分析</strong></font></h1><p>首先化简得 $C_i=B_i \% D_i+\sum_{j=1}^{D_i}E_{P_j}$。</p>
 <p>考虑操作 $1$，将点 $i$ 的后继从 $A_i$ 改为 $j$，若 $A_i==j$ 则跳过，否则会造成如下影响：</p>
 <ul>
 <li>$A_i$ 的度数减少 $1$，即 $D_{A_i}$ 减去 $1$，导致 $E_{A_i} = \lfloor \frac{B_{A_i}}{D_{A_i}} \rfloor$ 改变。</li>
 <li>$j$ 的度数增加 $1$，即 $D_j$ 加上 $1$，导致 $E_j = \lfloor \frac{B_j}{D_j} \rfloor$ 改变。</li>
-<li>连边情况改变，即最后令 $A_i=j$。</li>
+<li>连边情况改变，即最后令 $A_i=j​$。</li>
 </ul>
 <p>当某个 $E_i$ 改变时，$C_{i}$、$C_{A_i}$ 以及 $i$ 所有前驱 $j$ 的 $C_j$ 都要改变。</p>
 <h2 id="§-2-1-弱化版"><a href="#§-2-1-弱化版" class="headerlink" title="§ 2.1  弱化版"></a><font face="Consolas">§ 2.1  弱化版</font></h2><p>若没有 $3$ 操作，则我们考虑维护 $C’_i=C_i-E_{A_i}$，即不计后继贡献时的答案。</p>
