@@ -108,18 +108,18 @@
 
 
 
-  <meta name="description" content="§ 1  题意给定一个大小为 $n$ 的数集 $S$，求 $\sum\limits_{S’ \subseteq S,S’ \neq \emptyset} {\rm LCM}{S’}$，即 $S$ 所有非空子集的 ${\rm LCM}$ 和。 $n \leq 2000,a_i \leq 200$。  § 2 分析首先发现 $a_i \leq 200$ 很小，考虑是否可以分解质因数统计。但 $200$">
+  <meta name="description" content="§ 1  题意给定一个大小为 $n$ 的数集 $S$，求 $\sum\limits_{S’ \subseteq S,S’ \neq \emptyset} {\rm LCM}(S’)$，即 $S$ 所有非空子集的 ${\rm LCM}$ 和。 $n \leq 2000,a_i \leq 200$。  § 2 分析首先发现 $a_i \leq 200$ 很小，考虑是否可以分解质因数统计。但 $200$">
 <meta name="keywords" content="根号分治,容斥原理">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[EZOI][1211NOI模拟赛]LCM">
 <meta property="og:url" content="http://yoursite.com/2018/12/12/EZOI-1211NOI模拟赛-LCM/index.html">
 <meta property="og:site_name" content="Darkleaf Land">
-<meta property="og:description" content="§ 1  题意给定一个大小为 $n$ 的数集 $S$，求 $\sum\limits_{S’ \subseteq S,S’ \neq \emptyset} {\rm LCM}{S’}$，即 $S$ 所有非空子集的 ${\rm LCM}$ 和。 $n \leq 2000,a_i \leq 200$。  § 2 分析首先发现 $a_i \leq 200$ 很小，考虑是否可以分解质因数统计。但 $200$">
+<meta property="og:description" content="§ 1  题意给定一个大小为 $n$ 的数集 $S$，求 $\sum\limits_{S’ \subseteq S,S’ \neq \emptyset} {\rm LCM}(S’)$，即 $S$ 所有非空子集的 ${\rm LCM}$ 和。 $n \leq 2000,a_i \leq 200$。  § 2 分析首先发现 $a_i \leq 200$ 很小，考虑是否可以分解质因数统计。但 $200$">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-12-12T07:19:28.703Z">
+<meta property="og:updated_time" content="2018-12-12T09:41:16.096Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="[EZOI][1211NOI模拟赛]LCM">
-<meta name="twitter:description" content="§ 1  题意给定一个大小为 $n$ 的数集 $S$，求 $\sum\limits_{S’ \subseteq S,S’ \neq \emptyset} {\rm LCM}{S’}$，即 $S$ 所有非空子集的 ${\rm LCM}$ 和。 $n \leq 2000,a_i \leq 200$。  § 2 分析首先发现 $a_i \leq 200$ 很小，考虑是否可以分解质因数统计。但 $200$">
+<meta name="twitter:description" content="§ 1  题意给定一个大小为 $n$ 的数集 $S$，求 $\sum\limits_{S’ \subseteq S,S’ \neq \emptyset} {\rm LCM}(S’)$，即 $S$ 所有非空子集的 ${\rm LCM}$ 和。 $n \leq 2000,a_i \leq 200$。  § 2 分析首先发现 $a_i \leq 200$ 很小，考虑是否可以分解质因数统计。但 $200$">
 
 
 
@@ -373,7 +373,7 @@
                 
               
 
-              <time title="创建时间：2018-12-12 12:37:57 / 修改时间：15:19:28" itemprop="dateCreated datePublished" datetime="2018-12-12T12:37:57+08:00">2018-12-12</time>
+              <time title="创建时间：2018-12-12 12:37:57 / 修改时间：17:41:16" itemprop="dateCreated datePublished" datetime="2018-12-12T12:37:57+08:00">2018-12-12</time>
             
 
             
@@ -421,7 +421,7 @@
       
 
       
-        <h1 id="§-1-题意"><a href="#§-1-题意" class="headerlink" title="§ 1  题意"></a><font face="Consolas"><strong>§ 1  题意</strong></font></h1><p>给定一个大小为 $n$ 的数集 $S$，求 $\sum\limits_{S’ \subseteq S,S’ \neq \emptyset} {\rm LCM}{S’}$，即 $S$ 所有非空子集的 ${\rm LCM}$ 和。</p>
+        <h1 id="§-1-题意"><a href="#§-1-题意" class="headerlink" title="§ 1  题意"></a><font face="Consolas"><strong>§ 1  题意</strong></font></h1><p>给定一个大小为 $n$ 的数集 $S$，求 $\sum\limits_{S’ \subseteq S,S’ \neq \emptyset} {\rm LCM}(S’)$，即 $S$ 所有非空子集的 ${\rm LCM}$ 和。</p>
 <p>$n \leq 2000,a_i \leq 200$。</p>
 <hr>
 <h1 id="§-2-分析"><a href="#§-2-分析" class="headerlink" title="§ 2 分析"></a><font face="Consolas"><strong>§ 2 分析</strong></font></h1><p>首先发现 $a_i \leq 200$ 很小，考虑是否可以分解质因数统计。但 $200$ 以内的质数有 $46$ 个，组成的 ${\rm LCM}$ 值域过大。</p>
