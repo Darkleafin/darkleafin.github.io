@@ -116,7 +116,7 @@
 <meta property="og:site_name" content="Darkleaf Land">
 <meta property="og:description" content="§ 1  题意记 $[n]=\lbrace 1,2,3,\cdots,n \rbrace$，对于集合 $S$ 定义 $\min S=\min\limits_{x\in S}x,\ \ F(S)=T^{\min S}$。 给出 $n,\ m,\ T$，求 $E(F(S)\ |\ S\subseteq [n],\ |S|=k)$ 的值，答案对 $M=998244353$ 取模。 $1\leq k\le">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-12-18T13:39:37.393Z">
+<meta property="og:updated_time" content="2018-12-18T23:57:47.809Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="[EZOI][1217NOI模拟赛]set">
 <meta name="twitter:description" content="§ 1  题意记 $[n]=\lbrace 1,2,3,\cdots,n \rbrace$，对于集合 $S$ 定义 $\min S=\min\limits_{x\in S}x,\ \ F(S)=T^{\min S}$。 给出 $n,\ m,\ T$，求 $E(F(S)\ |\ S\subseteq [n],\ |S|=k)$ 的值，答案对 $M=998244353$ 取模。 $1\leq k\le">
@@ -373,12 +373,24 @@
                 
               
 
-              <time title="创建时间：2018-12-18 18:52:12 / 修改时间：21:39:37" itemprop="dateCreated datePublished" datetime="2018-12-18T18:52:12+08:00">2018-12-18</time>
+              <time title="创建时间：2018-12-18 18:52:12" itemprop="dateCreated datePublished" datetime="2018-12-18T18:52:12+08:00">2018-12-18</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-12-19 07:57:47" itemprop="dateModified" datetime="2018-12-19T07:57:47+08:00">2018-12-19</time>
               
             
           </span>
@@ -428,16 +440,9 @@
 <h1 id="§-2-分析"><a href="#§-2-分析" class="headerlink" title="§ 2 分析"></a><font face="Consolas"><strong>§ 2 分析</strong></font></h1><p>令 $A_k=\sum\limits_{S\subseteq [n],\ |S|=k}F(S)$，则所求的答案等于 $\frac{A_k}{\binom{n}{k}}$。</p>
 <p>考虑从组合意义入手求解 $A_k$，我们从 $1\sim n$ 枚举 $\min S$ 的最小值。</p>
 <p>若当前最小值为 $i$，则可从比 $i$ 大的 $n-i$ 个数中取剩余 $k-1$ 个，贡献为 $T^i·\binom{n-i}{k-1}$，故有</p>
-<p>$\begin{equation} A_k=\sum\limits_{i=1}^nT^i·\binom{n-i}{k-1} \end{equation}$</p>
-<p>等式两边同乘 $T​$ ，可得</p>
-<p>$\begin{equation} TA_k=\sum\limits_{i=1}^nT^{i+1}·\binom{n-i}{k-1} \end{equation}$</p>
-<p>$\begin{equation} \qquad =\sum\limits_{i=2}^{n+1}T^i·\binom{n-i+1}{k-1} \end{equation}$</p>
-<p>两式相减，可得</p>
-<p>$\begin{equation} (T-1)\,A_k=\sum\limits_{i=2}^nT^i·\left[\binom{n-i+1}{k-1}-\binom{n-i}{k-1}\right]-T·\binom{n-1}{k-1} \end{equation}$</p>
-<p>$\begin{equation} \qquad\qquad\quad=\sum\limits_{i=2}^nT^i·\binom{n-i}{k-2}-T·\binom{n-1}{k-1} \end{equation}$</p>
-<p>$\begin{equation} \qquad\qquad\quad=\sum\limits_{i=1}^nT^i·\binom{n-i}{k-2}-T·\left[\binom{n-1}{k-2}+\binom{n-1}{k-1}\right] \end{equation}$</p>
-<p>$\begin{equation} \qquad\qquad\quad=A_{k-1}-T·\binom{n}{k-1} \end{equation}$</p>
-<p>考虑只需要先求出 $T-1$ 的逆元以及 $i=0\sim k-1$ 的 $\binom{n}{i}$ 即可 $O(n)$ 递推出 $A_k$。</p>
+<script type="math/tex; mode=display">\begin{align} A_k=\sum\limits_{i=1}^nT^i·\binom{n-i}{k-1} \end{align}</script><p>等式两边同乘 $T$ ，可得</p>
+<script type="math/tex; mode=display">\begin{align} TA_k&=\sum\limits_{i=1}^nT^{i+1}·\binom{n-i}{k-1} \\ &=\sum\limits_{i=2}^{n+1}T^i·\binom{n-i+1}{k-1} \end{align}</script><p>两式相减，可得</p>
+<script type="math/tex; mode=display">\begin{align} (T-1)\,A_k&=\sum\limits_{i=2}^nT^i·\left[\binom{n-i+1}{k-1}-\binom{n-i}{k-1}\right]-T·\binom{n-1}{k-1} \\ &=\sum\limits_{i=2}^nT^i·\binom{n-i}{k-2}-T·\binom{n-1}{k-1} \\ &=\sum\limits_{i=1}^nT^i·\binom{n-i}{k-2}-T·\left[\binom{n-1}{k-2}+\binom{n-1}{k-1}\right] \\ &=A_{k-1}-T·\binom{n}{k-1} \end{align}</script><p>考虑只需要先求出 $T-1$ 的逆元以及 $i=0\sim k-1$ 的 $\binom{n}{i}$ 即可 $O(n)$ 递推出 $A_k$。</p>
 <p>其中后者只需要先 $O(n)$ 递推出 $0\sim k-1$ 的逆元，然后即可从 $\binom{n}{0}$ 开始递推得到。</p>
 <p>注意 $T=1$ 的情况一定不要忘记特判！这种情况下上式左边会变成 $0·A_k$ 而无法计算，直接输出 $1$ 即可。</p>
 <p>总时间复杂度为 $O(n)$。</p>
