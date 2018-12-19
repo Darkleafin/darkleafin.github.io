@@ -1868,7 +1868,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #30b3da;
+  background: #8efff5;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -3138,7 +3138,7 @@ ul.breadcrumb li+li:last-child {
   }
 }
 body {
-  background-image: url("/images/Remilia.jpg");
+  background-image: url("/images/Remilia.gif");
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: 50% 50%;
