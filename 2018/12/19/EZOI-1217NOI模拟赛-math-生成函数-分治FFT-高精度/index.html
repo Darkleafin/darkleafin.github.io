@@ -108,18 +108,18 @@
 
 
 
-  <meta name="description" content="§ 1  题意对于集合 $S$，定义 $P(S)=\prod\limits_{x\in S}x$，即 $S$ 中元素之积。特别地，定义 $P(\emptyset)=1$。 记 $[n]=\lbrace 1,2,3,\cdots,n \rbrace$，对于 $n \in \Z,\ 0\leq k\leq n$，定义 $F(n,k)=\sum\limits_{S\subseteq[n],\ |S|=k">
+  <meta name="description" content="§ 1  题意对于集合 $S$，定义 $P(S)=\prod\limits_{x\in S}x$，即 $S$ 中元素之积。特别地，定义 $P(\emptyset)=1$。 记 $[n]=\lbrace 1,2,3,\cdots,n \rbrace$，对于 $n \in \mathbb{Z},\ 0\leq k\leq n$，定义 $F(n,k)=\sum\limits_{S\subseteq[n]">
 <meta name="keywords" content="生成函数,分治FFT,高精度">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[EZOI][1217NOI模拟赛]math(生成函数+分治FFT+高精度)">
 <meta property="og:url" content="http://yoursite.com/2018/12/19/EZOI-1217NOI模拟赛-math-生成函数-分治FFT-高精度/index.html">
 <meta property="og:site_name" content="Darkleaf Land">
-<meta property="og:description" content="§ 1  题意对于集合 $S$，定义 $P(S)=\prod\limits_{x\in S}x$，即 $S$ 中元素之积。特别地，定义 $P(\emptyset)=1$。 记 $[n]=\lbrace 1,2,3,\cdots,n \rbrace$，对于 $n \in \Z,\ 0\leq k\leq n$，定义 $F(n,k)=\sum\limits_{S\subseteq[n],\ |S|=k">
+<meta property="og:description" content="§ 1  题意对于集合 $S$，定义 $P(S)=\prod\limits_{x\in S}x$，即 $S$ 中元素之积。特别地，定义 $P(\emptyset)=1$。 记 $[n]=\lbrace 1,2,3,\cdots,n \rbrace$，对于 $n \in \mathbb{Z},\ 0\leq k\leq n$，定义 $F(n,k)=\sum\limits_{S\subseteq[n]">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-12-19T12:28:38.518Z">
+<meta property="og:updated_time" content="2018-12-19T12:46:45.888Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="[EZOI][1217NOI模拟赛]math(生成函数+分治FFT+高精度)">
-<meta name="twitter:description" content="§ 1  题意对于集合 $S$，定义 $P(S)=\prod\limits_{x\in S}x$，即 $S$ 中元素之积。特别地，定义 $P(\emptyset)=1$。 记 $[n]=\lbrace 1,2,3,\cdots,n \rbrace$，对于 $n \in \Z,\ 0\leq k\leq n$，定义 $F(n,k)=\sum\limits_{S\subseteq[n],\ |S|=k">
+<meta name="twitter:description" content="§ 1  题意对于集合 $S$，定义 $P(S)=\prod\limits_{x\in S}x$，即 $S$ 中元素之积。特别地，定义 $P(\emptyset)=1$。 记 $[n]=\lbrace 1,2,3,\cdots,n \rbrace$，对于 $n \in \mathbb{Z},\ 0\leq k\leq n$，定义 $F(n,k)=\sum\limits_{S\subseteq[n]">
 
 
 
@@ -373,7 +373,7 @@
                 
               
 
-              <time title="创建时间：2018-12-19 18:36:20 / 修改时间：20:28:38" itemprop="dateCreated datePublished" datetime="2018-12-19T18:36:20+08:00">2018-12-19</time>
+              <time title="创建时间：2018-12-19 18:36:20 / 修改时间：20:46:45" itemprop="dateCreated datePublished" datetime="2018-12-19T18:36:20+08:00">2018-12-19</time>
             
 
             
@@ -422,8 +422,8 @@
 
       
         <h1 id="§-1-题意"><a href="#§-1-题意" class="headerlink" title="§ 1  题意"></a><font face="Consolas"><strong>§ 1  题意</strong></font></h1><p>对于集合 $S$，定义 $P(S)=\prod\limits_{x\in S}x$，即 $S$ 中元素之积。特别地，定义 $P(\emptyset)=1$。</p>
-<p>记 $[n]=\lbrace 1,2,3,\cdots,n \rbrace$，对于 $n \in \Z,\ 0\leq k\leq n$，定义 $F(n,k)=\sum\limits_{S\subseteq[n],\ |S|=k}P(S)$。</p>
-<p>给定 $n$ 以及质数 $p$，求存在多少 $[0,n]$ 上的整数 $k$ 满足 $p\nmid F(n,k)$，答案对 $998244353$ 取模。</p>
+<p>记 $[n]=\lbrace 1,2,3,\cdots,n \rbrace$，对于 $n \in \mathbb{Z},\ 0\leq k\leq n$，定义 $F(n,k)=\sum\limits_{S\subseteq[n],\ |S|=k}P(S)$。</p>
+<p>给定 $n​$ 以及质数 $p​$，求存在多少 $[0,n]​$ 上的整数 $k​$ 满足 $p\nmid F(n,k)​$，答案对 $998244353​$ 取模。</p>
 <p>$1\leq n\leq 10^{1000},\ \ 2\leq p\leq 10^5$。</p>
 <hr>
 <h1 id="§-2-分析"><a href="#§-2-分析" class="headerlink" title="§ 2 分析"></a><font face="Consolas"><strong>§ 2 分析</strong></font></h1><p>由题意可得， $F(n,k)$ 表示从 $1\sim n$ 中选出 $k$ 个相乘的值。考虑其生成函数，显然有</p>
