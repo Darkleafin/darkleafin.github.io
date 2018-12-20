@@ -116,7 +116,7 @@
 <meta property="og:site_name" content="Darkleaf Land">
 <meta property="og:description" content="§ 1  前言本文大量参考 txc 巨爷的《基于变换合并的树上动态DP的链分治算法和全局平衡二叉树学习笔记》一文。在某些问题中，我们需要实现对某种 DP 的权值修改，以及快速询问全局或子结构的 DP 值。 如果我们能找到一种满足结合律的运算来描述转移过程的话，就可以用数据结构维护合并，降低复杂度。  § 2  例题一=&amp;gt; luogu 4719 【模板】动态dp§ 2.1  题意给定一棵有 $">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-12-11T09:14:38.586Z">
+<meta property="og:updated_time" content="2018-12-20T12:06:36.927Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="浅谈动态DP">
 <meta name="twitter:description" content="§ 1  前言本文大量参考 txc 巨爷的《基于变换合并的树上动态DP的链分治算法和全局平衡二叉树学习笔记》一文。在某些问题中，我们需要实现对某种 DP 的权值修改，以及快速询问全局或子结构的 DP 值。 如果我们能找到一种满足结合律的运算来描述转移过程的话，就可以用数据结构维护合并，降低复杂度。  § 2  例题一=&amp;gt; luogu 4719 【模板】动态dp§ 2.1  题意给定一棵有 $">
@@ -394,7 +394,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2018-12-11 17:14:38" itemprop="dateModified" datetime="2018-12-11T17:14:38+08:00">2018-12-11</time>
+                <time title="修改时间：2018-12-20 20:06:36" itemprop="dateModified" datetime="2018-12-20T20:06:36+08:00">2018-12-20</time>
               
             
           </span>
@@ -447,7 +447,7 @@
 <h2 id="§-2-2-分析"><a href="#§-2-2-分析" class="headerlink" title="§ 2.2  分析"></a><font face="Consolas">§ 2.2  分析</font></h2><p>本题的模型为<strong>树上带修最大权独立集</strong>，是动态 DP 的模板题。</p>
 <h3 id="§-2-2-1-弱化版"><a href="#§-2-2-1-弱化版" class="headerlink" title="§ 2.2.1  弱化版"></a><font face="Consolas">§ 2.2.1  弱化版</font></h3><p>首先考虑如果没有修改操作，我们可以直接进行 $\Theta(n)$ 的树形 DP。</p>
 <p>令 $f_{u,0/1}$ 表示以 $u$ 为根的子树中，不选 / 选 $u$ 时的最大权独立集的权值，则有</p>
-<script type="math/tex; mode=display">\begin{align} f_{u,0}&=\sum_{u→v}max\{f_{v,0},f_{v,1}\} \\ f_{u,1}&=a_u+\sum_{u→v}f_{v,0}\end{align}</script><h3 id="§-2-2-2-重写转移"><a href="#§-2-2-2-重写转移" class="headerlink" title="§ 2.2.2 重写转移"></a><font face="Consolas">§ 2.2.2 重写转移</font></h3><p>考虑树链剖分，求出 $u$ 的重儿子 $hson_u$。单独取出重儿子贡献的一项，则 DP 转化为</p>
+<script type="math/tex; mode=display">\begin{align} f_{u,0}&=\sum_{u→v}max\{f_{v,0},f_{v,1}\} \\ f_{u,1}&=a_u+\sum_{u→v}f_{v,0}\end{align}</script><h3 id="§-2-2-2-重写转移"><a href="#§-2-2-2-重写转移" class="headerlink" title="§ 2.2.2 重写转移"></a><font face="Consolas">§ 2.2.2 重写转移</font></h3><p>考虑树链剖分，求出 $u$ 的重儿子 $hson_u​$。单独取出重儿子贡献的一项，则 DP 转化为</p>
 <script type="math/tex; mode=display">\begin{align} f_{u,0}&=max\{f_{hson_u,0},f_{hson_u,1}\}+\sum_{u→v,v\neq hson_u}max\{f_{v,0},f_{v,1}\} \\ f_{u,1}&=a_u+f_{hson_u,0}+\sum_{u→v,v\neq hson_u}f_{v,0}\end{align}</script><p>记</p>
 <script type="math/tex; mode=display">\begin{align} g_{u,0}&=\sum_{u→v,v\neq hson_u}max\{f_{v,0},f_{v,1}\} \\ g_{u,1}&=a_u+\sum_{u→v,v\neq hson_u}f_{v,0}\end{align}</script><p>则有</p>
 <script type="math/tex; mode=display">\begin{align} f_{u,0}&=max\{f_{hson_u,0},f_{hson_u,1}\}+g_{u,0} \\ f_{u,1}&=f_{hson_u,0}+g_{u,1}\end{align}</script><h3 id="§-2-2-3-矩阵优化"><a href="#§-2-2-3-矩阵优化" class="headerlink" title="§ 2.2.3 矩阵优化"></a><font face="Consolas">§ 2.2.3 矩阵优化</font></h3><p>我们重新定义矩阵乘法 $C=A*B$ 来描述这个转移，令</p>
@@ -608,7 +608,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">11</span>
+                    <span class="site-state-item-count">12</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -663,7 +663,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">20</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">22</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
