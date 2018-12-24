@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.4.2" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/Yuyuko.gif?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/Yuyuko.gif?v=6.4.2">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.4.2" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.4.2',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="§ 1 前言对于离散卷积式 \begin{align} c_n=\sum\limits_{i+j=n}a_ib_j \end{align}我们可以直接使用 $\rm FFT$ 求解。 考虑该问题的扩展，如何求解将 $i+j=n$ 限制中的 $+$ 换成其他运算符的卷积式。 对于 $c_n=\sum\limits_{i-j=n}a_ib_j$，可以将多项式 $B$ 系数反转后进行 $\rm FFT$">
+<meta name="keywords" content="FWT">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浅谈FWT">
+<meta property="og:url" content="http://yoursite.com/2018/12/24/浅谈FWT/index.html">
+<meta property="og:site_name" content="Darkleaf Land">
+<meta property="og:description" content="§ 1 前言对于离散卷积式 \begin{align} c_n=\sum\limits_{i+j=n}a_ib_j \end{align}我们可以直接使用 $\rm FFT$ 求解。 考虑该问题的扩展，如何求解将 $i+j=n$ 限制中的 $+$ 换成其他运算符的卷积式。 对于 $c_n=\sum\limits_{i-j=n}a_ib_j$，可以将多项式 $B$ 系数反转后进行 $\rm FFT$">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-12-24T11:27:06.539Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="浅谈FWT">
+<meta name="twitter:description" content="§ 1 前言对于离散卷积式 \begin{align} c_n=\sum\limits_{i+j=n}a_ib_j \end{align}我们可以直接使用 $\rm FFT$ 求解。 考虑该问题的扩展，如何求解将 $i+j=n$ 限制中的 $+$ 换成其他运算符的卷积式。 对于 $c_n=\sum\limits_{i-j=n}a_ib_j$，可以将多项式 $B$ 系数反转后进行 $\rm FFT$">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/12/24/浅谈FWT/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>浅谈FWT | Darkleaf Land</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Darkleaf Land</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/24/浅谈FWT/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Willem">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/Yuyuko.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Darkleaf Land">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">浅谈FWT
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          
+          
+            <i class="fa fa-thumb-tack"></i>
+            <font color="00CF00" size="3">置顶</font>
+            <span class="post-meta-divider">|</span>
+          
+
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-12-24 14:46:04 / 修改时间：19:27:06" itemprop="dateCreated datePublished" datetime="2018-12-24T14:46:04+08:00">2018-12-24</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/12/24/浅谈FWT/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2018/12/24/浅谈FWT/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="§-1-前言"><a href="#§-1-前言" class="headerlink" title="§ 1 前言"></a><font face="Consolas"><strong>§ 1 前言</strong></font></h1><p>对于离散卷积式</p>
+<script type="math/tex; mode=display">\begin{align} c_n=\sum\limits_{i+j=n}a_ib_j \end{align}</script><p>我们可以直接使用 $\rm FFT$ 求解。</p>
+<p>考虑该问题的扩展，如何求解将 $i+j=n$ 限制中的 $+$ 换成其他运算符的卷积式。</p>
+<p>对于 $c_n=\sum\limits_{i-j=n}a_ib_j$，可以将多项式 $B$ 系数反转后进行 $\rm FFT$。</p>
+<p>对于 $c_n=\sum\limits_{i\times j=n} a_ib_j$，在模 $p$ 意义下，且 $p$ 有原根 $G$ 时可以将 $i$ 位置的值放到 $\log_G i\pmod{p}$ 位置进行 $\rm FFT$，然后再放回来。</p>
+<p>而对于位运算卷积，即</p>
+<script type="math/tex; mode=display">\left\lbrace \begin{align} c_n=\sum\limits_{i\&j=n}a_ib_j \\ c_n=\sum\limits_{i\,|\,j=n}a_ib_j \\ c_n=\sum\limits_{i\oplus j=n}a_ib_j \end{align} \right.</script><p>可以使用快速沃尔什变换 $(\rm Fast\ Walsh\ Transform,\ FWT)$ 求解。</p>
+<hr>
+<h1 id="§-2-快速沃尔什变换"><a href="#§-2-快速沃尔什变换" class="headerlink" title="§ 2 快速沃尔什变换"></a><font face="Consolas"><strong>§ 2 快速沃尔什变换</strong></font></h1><p>首先声明下文中用到的表示法。</p>
+<p>对于一个 $n-1$ 次多项式</p>
+<script type="math/tex; mode=display">\begin{align} f(x)=a_0x^0+a_1x^1+a_2x^2+\cdots+a_{n-1}x^{n-1} \end{align}</script><p>将其表示为</p>
+<script type="math/tex; mode=display">\begin{align} (a_0,a_1,a_2,\cdots,a_{n-1}) \end{align}</script><p>定义多项式加法 $(\rm operator\ +)$ 为</p>
+<script type="math/tex; mode=display">\begin{align} C(x)&=A(x)+B(x) \\ &=(a_0,\ a_1,\ a_2,\cdots,\ a_{n-1})+(b_0,\ b_1,\ b_2,\cdots,\ b_{n-1}) \\ &=(a_0+b_0,\ a_1+b_1,\ a_2+b_2,\cdots,\ a_{n-1}+b_{n-1}) \end{align}</script><p>定义多项式减法 $(\rm operator\ -)$ 为</p>
+<script type="math/tex; mode=display">\begin{align} C(x)&=A(x)-B(x) \\ &=(a_0,\ a_1,\ a_2,\cdots,\ a_{n-1})-(b_0,\ b_1,\ b_2,\cdots,\ b_{n-1}) \\ &=(a_0-b_0,\ a_1-b_1,\ a_2-b_2,\cdots,\ a_{n-1}-b_{n-1}) \end{align}</script><p>定义多项式对应系数乘法 $(\rm operator\ \times)$ 为</p>
+<script type="math/tex; mode=display">\begin{align} C(x)&=A(x)\times B(x) \\ &=(a_0,\ a_1,\ a_2,\cdots,\ a_{n-1})\times(b_0,\ b_1,\ b_2,\cdots,\ b_{n-1}) \\ &=(a_0\times b_0,\ a_1\times b_1,\ a_2\times b_2,\cdots,\ a_{n-1}\times b_{n-1}) \end{align}</script><p>对于一个位运算符 $\boxtimes\in\lbrace\ |,\ \&amp;,\oplus\rbrace$，定义位运算卷积</p>
+<script type="math/tex; mode=display">\begin{align} C(x)&=A(x)\boxtimes B(x) \\ &=(a_0,\ a_1,\ a_2,\cdots,\ a_{n-1})\boxtimes(b_0,\ b_1,\ b_2,\cdots,\ b_{n-1}) \\ &=(\sum\limits_{i\boxtimes j=0}a_ib_j,\sum\limits_{i\boxtimes j=1}a_ib_j,\sum\limits_{i\boxtimes j=2}a_ib_j,\cdots,\sum\limits_{i\boxtimes j=n-1}a_ib_j) \end{align}</script><p>易证得，$\boxtimes$ 运算具有分配律。</p>
+<p>定义多项式拼接运算 $(A,B)$ 为</p>
+<script type="math/tex; mode=display">\begin{align} (A,B)&=((a_0,\ a_1,\ a_2,\cdots,\ a_{n-1}),(b_0,\ b_1,\ b_2,\cdots,\ b_{n-1})) \\ &=(a_0,\ a_1,\ a_2,\cdots,\ a_{n-1},b_0,\ b_1,\ b_2,\cdots,\ b_{n-1}) \end{align}</script><p>对于一个 $2^k-1$ 次的多项式 $A$，令 $A_0$ 为其前 $2^{k-1}$ 项，$A_1$ 为其后 $2^{k-1}$ 项。</p>
+<p>代码中出现的常量、变量及函数定义如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">long</span> <span class="keyword">long</span> ll;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> inv2 = <span class="number">499122177</span>, MOD = <span class="number">998244353</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">const</span> <span class="keyword">int</span> &amp;x, <span class="keyword">const</span> <span class="keyword">int</span> &amp;y)</span> </span>&#123;<span class="keyword">return</span> x + y &gt;= MOD ? x + y - MOD : x + y;&#125;</span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">int</span> <span class="title">mul</span><span class="params">(<span class="keyword">const</span> <span class="keyword">int</span> &amp;x, <span class="keyword">const</span> <span class="keyword">int</span> &amp;y)</span> </span>&#123;<span class="keyword">return</span> x * (ll)y % MOD;&#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="§-2-1-按位或卷积"><a href="#§-2-1-按位或卷积" class="headerlink" title="§ 2.1 按位或卷积"></a><font face="Consolas">§ 2.1 按位或卷积</font></h2><h3 id="§-2-1-1-构造"><a href="#§-2-1-1-构造" class="headerlink" title="§ 2.1.1 构造"></a><font face="Consolas">§ 2.1.1 构造</font></h3><p>按位或卷积形式如下</p>
+<script type="math/tex; mode=display">\begin{align} C&=A\ |\ B \\ \Longleftrightarrow c_n&=\sum\limits_{i\,|\,j=n}a_ib_j \end{align}</script><p>定义 ${\rm FWT}(A)$ 为</p>
+<script type="math/tex; mode=display">\begin{align} {\rm FWT}(A)=(\sum\limits_{i\,|\,0=0}a_i,\sum\limits_{i\,|\,1=1}a_i,\sum\limits_{i\,|\,2=2}a_i,\cdots,\sum\limits_{i\,|\,(n-1)=(n-1)}a_i) \end{align}</script><p>容易发现 ${\rm FWT}(A\ |\ B)={\rm FWT}(A)\times{\rm FWT}(B)$，证明如下</p>
+<script type="math/tex; mode=display">\begin{align} {\rm FWT}(A)\times{\rm FWT}(B)&=(\sum\limits_{i\,|\,0=0}a_i,\sum\limits_{i\,|\,1=1}a_i,\cdots,\sum\limits_{i\,|\,(n-1)=(n-1)}a_i)\times(\sum\limits_{i\,|\,0=0}b_i,\sum\limits_{i\,|\,1=1}b_i,\cdots,\sum\limits_{i\,|\,(n-1)=(n-1)}b_i) \\ &=(\sum\limits_{i\,|\,0=0}a_i\sum\limits_{j\,|\,0=0}b_j,\sum\limits_{i\,|\,1=1}a_i\sum\limits_{j\,|\,1=1}b_j,\cdots,\sum\limits_{i\,|\,(n-1)=(n-1)}a_i\sum\limits_{j\,|\,(n-1)=(n-1)}b_j) \\ &=(\sum\limits_{i\,|\,j\,|\,0=0}a_ib_j,\sum\limits_{i\,|\,j\,|\,1=1}a_ib_j,\cdots,\sum\limits_{i\,|\,j\,|\,(n-1)=(n-1)}a_ib_j \\  &=(\sum\limits_{k\,|\,0=0}\sum\limits_{i\,|\,j=k}a_ib_j,\sum\limits_{k\,|\,1=1}\sum\limits_{i\,|\,j=k}a_ib_j,\cdots,\sum\limits_{k\,|\,(n-1)=(n-1)}\sum\limits_{i\,|\,j=k}a_ib_j \\ &={\rm FWT}(A\ |\ B) \end{align}</script><p>所以我们只需寻找 $A\Leftrightarrow{\rm FWT}(A)$ 之间快速变换的方法即可计算出卷积。</p>
+<h3 id="§-2-1-2-快速变换"><a href="#§-2-1-2-快速变换" class="headerlink" title="§ 2.1.2 快速变换"></a><font face="Consolas">§ 2.1.2 快速变换</font></h3><p>容易发现，对于一个 $2^n-1$ 次多项式 $A$，有如下结论</p>
+<ul>
+<li>对于 ${\rm FWT}(A)_0$，只有 ${\rm FWT}(A_0)$ 的对应项有贡献。</li>
+<li>对于 ${\rm FWT}(A)_1$，${\rm FWT}(A_0)$ 及 ${\rm FWT}(A_1)$ 的对应项均有贡献。</li>
+</ul>
+<p>所以有</p>
+<script type="math/tex; mode=display">{\rm FWT}(A)=\left\lbrace\begin{align} &A\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad ,n=1 \\ &({\rm FWT}(A_0),\ {\rm FWT}(A_1)+{\rm FWT}(A_0))\quad,n\neq 1 \end{align}\right.</script><script type="math/tex; mode=display">{\rm IFWT}(A)=\left\lbrace\begin{align} &A\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\quad,n=1 \\ &({\rm IFWT}(A_0),\ {\rm IFWT}(A_1)-{\rm IFWT}(A_0))\quad,n\neq 1 \end{align}\right.</script><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">FWT_or</span><span class="params">(<span class="keyword">int</span> *A)</span></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> i = <span class="number">1</span>; i &lt; lim; i &lt;&lt;= <span class="number">1</span>)</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> j = <span class="number">0</span>; j &lt; lim; j += i &lt;&lt; <span class="number">1</span>)</span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> k = <span class="number">0</span>; k &lt; i; k++)</span><br><span class="line">				A[j + k + i] = add(A[j + k + i] , A[j + k]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">IFWT_or</span><span class="params">(<span class="keyword">int</span> *A)</span></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> i = <span class="number">1</span>; i &lt; lim; i &lt;&lt;= <span class="number">1</span>)</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> j = <span class="number">0</span>; j &lt; lim; j += i &lt;&lt; <span class="number">1</span>)</span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> k = <span class="number">0</span>; k &lt; i; k++)</span><br><span class="line">				A[j + k + i] = add(A[j + k + i] , MOD - A[j + k]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="§-2-2-按位与卷积"><a href="#§-2-2-按位与卷积" class="headerlink" title="§ 2.2 按位与卷积"></a><font face="Consolas">§ 2.2 按位与卷积</font></h2><p>按位与卷积形式如下</p>
+<script type="math/tex; mode=display">\begin{align} C&=A\ \&\ B \\ \Longleftrightarrow c_n&=\sum\limits_{i\&j=n}a_ib_j \end{align}</script><script type="math/tex; mode=display">\begin{align} {\rm FWT}(A)=(\sum\limits_{i\&0=0}a_i,\sum\limits_{i\&1=1}a_i,\sum\limits_{i\&2=2}a_i,\cdots,\sum\limits_{i\&(n-1)=(n-1)}a_i) \end{align}</script><p>处理方式和按位或卷积基本相同，下面直接给出结论</p>
+<script type="math/tex; mode=display">{\rm FWT}(A)=\left\lbrace\begin{align} &A\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad ,n=1 \\ &({\rm FWT}(A_0)+{\rm FWT}(A_1),\ {\rm FWT}(A_1))\quad,n\neq 1 \end{align}\right.</script><script type="math/tex; mode=display">{\rm IFWT}(A)=\left\lbrace\begin{align} &A\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\quad,n=1 \\ &({\rm IFWT}(A_0)-{\rm IFWT}(A_1),\ {\rm IFWT}(A_1))\quad,n\neq 1 \end{align}\right.</script><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">FWT_and</span><span class="params">(<span class="keyword">int</span> *A)</span></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> i = <span class="number">1</span>; i &lt; lim; i &lt;&lt;= <span class="number">1</span>)</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> j = <span class="number">0</span>; j &lt; lim; j += i &lt;&lt; <span class="number">1</span>)</span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> k = <span class="number">0</span>; k &lt; i; k++)</span><br><span class="line">				A[j + k] = add(A[j + k] , A[j + k + i]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">IFWT_and</span><span class="params">(<span class="keyword">int</span> *A)</span></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> i = <span class="number">1</span>; i &lt; lim; i &lt;&lt;= <span class="number">1</span>)</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> j = <span class="number">0</span>; j &lt; lim; j += i &lt;&lt; <span class="number">1</span>)</span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> k = <span class="number">0</span>; k &lt; i; k++)</span><br><span class="line">				A[j + k] = add(A[j + k] , MOD - A[j + k + i]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="§-2-3-按位异或卷积"><a href="#§-2-3-按位异或卷积" class="headerlink" title="§ 2.3 按位异或卷积"></a><font face="Consolas">§ 2.3 按位异或卷积</font></h2><p>按位异或卷积形式如下</p>
+<script type="math/tex; mode=display">\begin{align} C&=A\oplus B \\ \Longleftrightarrow c_n&=\sum\limits_{i\oplus j=n}a_ib_j \end{align}</script><script type="math/tex; mode=display">\begin{align} {\rm FWT}(A)=(\sum\limits_{i\oplus 0=0}a_i,\sum\limits_{i\oplus 1=1}a_i,\sum\limits_{i\oplus 2=2}a_i,\cdots,\sum\limits_{i\oplus (n-1)=(n-1)}a_i) \end{align}</script><p>处理方式和前两个位运算卷积基本相同，证明见 <a href="https://blog.csdn.net/zhouyuheng2003/article/details/84728063" target="_blank" rel="noopener">zyh 巨爷的博文</a>，下面直接给出结论</p>
+<script type="math/tex; mode=display">{\rm FWT}(A)=\left\lbrace\begin{align} &A\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\quad\ \ ,n=1 \\ &({\rm FWT}(A_0)+{\rm FWT}(A_1),\ {\rm FWT}(A_0)-{\rm FWT}(A_1))\quad,n\neq 1 \end{align}\right.</script><script type="math/tex; mode=display">{\rm IFWT}(A)=\left\lbrace\begin{align} &A\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\ \ ,n=1 \\ &\left(\frac{ {\rm IFWT}(A_0)+{\rm IFWT}(A_1)}{2},\ \frac{ {\rm IFWT}(A_0)-{\rm IFWT}(A_1)}{2}\right)\quad,n\neq 1 \end{align}\right.</script><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">FWT_xor</span><span class="params">(<span class="keyword">int</span> *A)</span></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> i = <span class="number">1</span>; i &lt; lim; i &lt;&lt;= <span class="number">1</span>)</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> j = <span class="number">0</span>; j &lt; lim; j += i &lt;&lt; <span class="number">1</span>)</span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> k = <span class="number">0</span>; k &lt; i; k++)&#123;</span><br><span class="line">				<span class="keyword">const</span> <span class="keyword">int</span> L = A[j + k], R = A[j + k + i];</span><br><span class="line">				A[j + k] = add(L, R), A[j + k + i] = add(L, MOD - R);</span><br><span class="line">			&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">IFWT_xor</span><span class="params">(<span class="keyword">int</span> *A)</span></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> i = <span class="number">1</span>; i &lt; lim; i &lt;&lt;= <span class="number">1</span>)</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> j = <span class="number">0</span>; j &lt; lim; j += i &lt;&lt; <span class="number">1</span>)</span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> k = <span class="number">0</span>; k &lt; i; k++)&#123;</span><br><span class="line">				<span class="keyword">const</span> <span class="keyword">int</span> L = A[j + k], R = A[j + k + i];</span><br><span class="line">				A[j + k] = add(L, R), A[j + k + i] = add(L, MOD - R);</span><br><span class="line">				A[j + k] = mul(A[j + k], inv2), A[j + k + i] = mul(A[j + k + i], inv2);</span><br><span class="line">			&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="§-3-模板题"><a href="#§-3-模板题" class="headerlink" title="§ 3 模板题"></a><font face="Consolas"><strong>§ 3 模板题</strong></font></h1><h3 id="gt-luogu-4717-【模板】快速沃尔什变换"><a href="#gt-luogu-4717-【模板】快速沃尔什变换" class="headerlink" title="=&gt; luogu 4717 【模板】快速沃尔什变换"></a><font face="Consolas">=&gt; <a href="https://www.luogu.org/problemnew/show/P4717" target="_blank" rel="noopener">luogu 4717 【模板】快速沃尔什变换</a></font></h3><h2 id="§-3-1-题意"><a href="#§-3-1-题意" class="headerlink" title="§ 3.1 题意"></a><font face="Consolas">§ 3.1 题意</font></h2><p>给定长度为 $2^n$ 的两个多项式 $A,\ B$，设 $C_i=\sum\limits_{j\boxtimes k=i}A_jB_k$。</p>
+<p>求出当 $\boxtimes$ 分别为 ${\rm or},\ {\rm and},\ {\rm xor}$ 时的 $C$。</p>
+<p>$0\leq n\leq 17$。</p>
+<h2 id="§-3-2-代码"><a href="#§-3-2-代码" class="headerlink" title="§ 3.2 代码"></a><font face="Consolas">§ 3.2 代码</font></h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstdlib&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cmath&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">long</span> <span class="keyword">long</span> ll;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> inv2 = <span class="number">499122177</span>, MOD = <span class="number">998244353</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">getint</span><span class="params">(<span class="keyword">int</span> &amp;num)</span></span>&#123;</span><br><span class="line">	<span class="keyword">register</span> <span class="keyword">int</span> ch, neg = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">while</span>(!<span class="built_in">isdigit</span>(ch = getchar())) <span class="keyword">if</span>(ch == <span class="string">'-'</span>) neg = <span class="number">1</span>;</span><br><span class="line">	num = ch &amp; <span class="number">15</span>;</span><br><span class="line">	<span class="keyword">while</span>(<span class="built_in">isdigit</span>(ch = getchar())) num = num * <span class="number">10</span> + (ch &amp; <span class="number">15</span>);</span><br><span class="line">	<span class="keyword">if</span>(neg) num = -num;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">const</span> <span class="keyword">int</span> &amp;x, <span class="keyword">const</span> <span class="keyword">int</span> &amp;y)</span> </span>&#123;<span class="keyword">return</span> x + y &gt;= MOD ? x + y - MOD : x + y;&#125;</span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">int</span> <span class="title">mul</span><span class="params">(<span class="keyword">const</span> <span class="keyword">int</span> &amp;x, <span class="keyword">const</span> <span class="keyword">int</span> &amp;y)</span> </span>&#123;<span class="keyword">return</span> x * (ll)y % MOD;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> n, lim, A[<span class="number">131080</span>], B[<span class="number">131080</span>], C[<span class="number">131080</span>];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">FWT_or</span><span class="params">(<span class="keyword">int</span> *A)</span></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> i = <span class="number">1</span>; i &lt; lim; i &lt;&lt;= <span class="number">1</span>)</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> j = <span class="number">0</span>; j &lt; lim; j += i &lt;&lt; <span class="number">1</span>)</span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> k = <span class="number">0</span>; k &lt; i; k++)</span><br><span class="line">				A[j + k + i] = add(A[j + k + i] , A[j + k]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">IFWT_or</span><span class="params">(<span class="keyword">int</span> *A)</span></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> i = <span class="number">1</span>; i &lt; lim; i &lt;&lt;= <span class="number">1</span>)</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> j = <span class="number">0</span>; j &lt; lim; j += i &lt;&lt; <span class="number">1</span>)</span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> k = <span class="number">0</span>; k &lt; i; k++)</span><br><span class="line">				A[j + k + i] = add(A[j + k + i] , MOD - A[j + k]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">FWT_and</span><span class="params">(<span class="keyword">int</span> *A)</span></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> i = <span class="number">1</span>; i &lt; lim; i &lt;&lt;= <span class="number">1</span>)</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> j = <span class="number">0</span>; j &lt; lim; j += i &lt;&lt; <span class="number">1</span>)</span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> k = <span class="number">0</span>; k &lt; i; k++)</span><br><span class="line">				A[j + k] = add(A[j + k] , A[j + k + i]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">IFWT_and</span><span class="params">(<span class="keyword">int</span> *A)</span></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> i = <span class="number">1</span>; i &lt; lim; i &lt;&lt;= <span class="number">1</span>)</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> j = <span class="number">0</span>; j &lt; lim; j += i &lt;&lt; <span class="number">1</span>)</span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> k = <span class="number">0</span>; k &lt; i; k++)</span><br><span class="line">				A[j + k] = add(A[j + k] , MOD - A[j + k + i]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">FWT_xor</span><span class="params">(<span class="keyword">int</span> *A)</span></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> i = <span class="number">1</span>; i &lt; lim; i &lt;&lt;= <span class="number">1</span>)</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> j = <span class="number">0</span>; j &lt; lim; j += i &lt;&lt; <span class="number">1</span>)</span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> k = <span class="number">0</span>; k &lt; i; k++)&#123;</span><br><span class="line">				<span class="keyword">const</span> <span class="keyword">int</span> L = A[j + k], R = A[j + k + i];</span><br><span class="line">				A[j + k] = add(L, R), A[j + k + i] = add(L, MOD - R);</span><br><span class="line">			&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">IFWT_xor</span><span class="params">(<span class="keyword">int</span> *A)</span></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> i = <span class="number">1</span>; i &lt; lim; i &lt;&lt;= <span class="number">1</span>)</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> j = <span class="number">0</span>; j &lt; lim; j += i &lt;&lt; <span class="number">1</span>)</span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> k = <span class="number">0</span>; k &lt; i; k++)&#123;</span><br><span class="line">				<span class="keyword">const</span> <span class="keyword">int</span> L = A[j + k], R = A[j + k + i];</span><br><span class="line">				A[j + k] = add(L, R), A[j + k + i] = add(L, MOD - R);</span><br><span class="line">				A[j + k] = mul(A[j + k], inv2), A[j + k + i] = mul(A[j + k + i], inv2);</span><br><span class="line">			&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	getint(n), lim = <span class="number">1</span> &lt;&lt; n;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> i = <span class="number">0</span>; i &lt; lim; i++) getint(A[i]);</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> i = <span class="number">0</span>; i &lt; lim; i++) getint(B[i]);</span><br><span class="line">	</span><br><span class="line">	FWT_or(A), FWT_or(B);</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> i = <span class="number">0</span>; i &lt; lim; i++) C[i] = mul(A[i], B[i]);</span><br><span class="line">	IFWT_or(A), IFWT_or(B), IFWT_or(C);</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> i = <span class="number">0</span>; i &lt; lim; i++) <span class="built_in">printf</span>(<span class="string">"%d "</span>, C[i]); <span class="built_in">puts</span>(<span class="string">""</span>);</span><br><span class="line">	</span><br><span class="line">	FWT_and(A), FWT_and(B);</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> i = <span class="number">0</span>; i &lt; lim; i++) C[i] = mul(A[i], B[i]);</span><br><span class="line">	IFWT_and(A), IFWT_and(B), IFWT_and(C);</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> i = <span class="number">0</span>; i &lt; lim; i++) <span class="built_in">printf</span>(<span class="string">"%d "</span>, C[i]); <span class="built_in">puts</span>(<span class="string">""</span>);</span><br><span class="line">	</span><br><span class="line">	FWT_xor(A), FWT_xor(B);</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> i = <span class="number">0</span>; i &lt; lim; i++) C[i] = mul(A[i], B[i]);</span><br><span class="line">	IFWT_xor(C);</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">register</span> <span class="keyword">int</span> i = <span class="number">0</span>; i &lt; lim; i++) <span class="built_in">printf</span>(<span class="string">"%d "</span>, C[i]); <span class="built_in">puts</span>(<span class="string">""</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/FWT/" rel="tag"># FWT</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/12/24/浅谈多项式/" rel="next" title="浅谈多项式">
+                <i class="fa fa-chevron-left"></i> 浅谈多项式
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/Yuyuko.gif" alt="Willem">
+            
+              <p class="site-author-name" itemprop="name">Willem</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">14</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">24</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#§-1-前言"><span class="nav-number">1.</span> <span class="nav-text">§ 1 前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#§-2-快速沃尔什变换"><span class="nav-number">2.</span> <span class="nav-text">§ 2 快速沃尔什变换</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#§-2-1-按位或卷积"><span class="nav-number">2.1.</span> <span class="nav-text">§ 2.1 按位或卷积</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#§-2-1-1-构造"><span class="nav-number">2.1.1.</span> <span class="nav-text">§ 2.1.1 构造</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#§-2-1-2-快速变换"><span class="nav-number">2.1.2.</span> <span class="nav-text">§ 2.1.2 快速变换</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#§-2-2-按位与卷积"><span class="nav-number">2.2.</span> <span class="nav-text">§ 2.2 按位与卷积</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#§-2-3-按位异或卷积"><span class="nav-number">2.3.</span> <span class="nav-text">§ 2.3 按位异或卷积</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#§-3-模板题"><span class="nav-number">3.</span> <span class="nav-text">§ 3 模板题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#gt-luogu-4717-【模板】快速沃尔什变换"><span class="nav-number">3.0.1.</span> <span class="nav-text">=&gt; luogu 4717 【模板】快速沃尔什变换</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#§-3-1-题意"><span class="nav-number">3.1.</span> <span class="nav-text">§ 3.1 题意</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#§-3-2-代码"><span class="nav-number">3.2.</span> <span class="nav-text">§ 3.2 代码</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright"> &copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Willem</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Gemini</a> v6.4.2</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/canvas_lines.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.4.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  
+  
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(function (item) {
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'OXDfo9ifQ5JdUAytDd58BTxw-9Nh9j0Va',
+        appKey: '59OMgj5RquYiTASICJlFn9eH',
+        placeholder: 'o(≧∀≦)o~~~ 来阿，快活阿!',
+        avatar:'mm',
+        meta:guest,
+        pageSize:'10' || 10,
+        visitor: false
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      },
+      TeX: {equationNumbers: { autoNumber: "AMS" }}
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+    
+  
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/pio.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
