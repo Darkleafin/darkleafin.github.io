@@ -116,7 +116,7 @@
 <meta property="og:site_name" content="Darkleaf Land">
 <meta property="og:description" content="§ 1 多项式基本操作 多项式乘法 多项式求逆 多项式除法/取模 多项式开根 多项式 $\ln$ 多项式 $\exp$ 多项式 $k$ 次幂  为简化运算，所有操作均在 ${\rm mod}\ 998244353$ 意义下进行。实现时注意清空高次系数。 代码中出现的常量、变量及函数定义如下： 123456789101112131415typedef long long ll;typedef str">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-12-24T11:17:52.176Z">
+<meta property="og:updated_time" content="2018-12-24T11:38:57.233Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="浅谈多项式">
 <meta name="twitter:description" content="§ 1 多项式基本操作 多项式乘法 多项式求逆 多项式除法/取模 多项式开根 多项式 $\ln$ 多项式 $\exp$ 多项式 $k$ 次幂  为简化运算，所有操作均在 ${\rm mod}\ 998244353$ 意义下进行。实现时注意清空高次系数。 代码中出现的常量、变量及函数定义如下： 123456789101112131415typedef long long ll;typedef str">
@@ -377,7 +377,7 @@
                 
               
 
-              <time title="创建时间：2018-12-24 11:14:58 / 修改时间：19:17:52" itemprop="dateCreated datePublished" datetime="2018-12-24T11:14:58+08:00">2018-12-24</time>
+              <time title="创建时间：2018-12-24 11:14:58 / 修改时间：19:38:57" itemprop="dateCreated datePublished" datetime="2018-12-24T11:14:58+08:00">2018-12-24</time>
             
 
             
@@ -466,7 +466,7 @@
 <hr>
 <h2 id="§-1-π-多项式牛顿迭代法"><a href="#§-1-π-多项式牛顿迭代法" class="headerlink" title="§ 1.π 多项式牛顿迭代法"></a><font face="Consolas">§ 1.π 多项式牛顿迭代法</font></h2><p>该方法可以用来推很多公式，如多项式求逆、开根以及 $\exp$ 等。</p>
 <p>给出一个关于多项式 $f(x)$ 的方程 $g(f(x))=0$，假设已求出 $f(x)$ 的前 $n$ 项 $f_0(x)$，即</p>
-<script type="math/tex; mode=display">\left\lbrace \begin{align} f(x)\equiv f_0(x)&\pmod{x^n} \\ g(f_0(x))\equiv 0&\pmod{x^n} \end{align} \right.</script><p>将函数 $g(f(x))$ 在 $f_0(x)$ 上泰勒展开得</p>
+<script type="math/tex; mode=display">\left\lbrace \begin{aligned} f(x)\equiv f_0(x)&\pmod{x^n} \\ g(f_0(x))\equiv 0&\pmod{x^n} \end{aligned} \right.</script><p>将函数 $g(f(x))$ 在 $f_0(x)$ 上泰勒展开得</p>
 <script type="math/tex; mode=display">\begin{align} g(f(x))=g(f_0(x))+\frac{g'(f_0(x))}{1!}(f(x)-f_0(x))^1+\frac{g''(f_0(x))}{2!}(f(x)-f_0(x))^2+\cdots\cdots \end{align}</script><p>注意到 $f(x)-f_0(x)$ 第 $0\sim n-1$ 项为 $0$，故 $(f(x)-f_0(x))^2$ 第 $0\sim 2n-1$ 项为 $0$，于是有</p>
 <script type="math/tex; mode=display">\begin{align} g(f(x))\equiv g(f_0(x))+g'(f_0(x))(f(x)-f_0(x))\equiv 0\pmod{x^{2n}} \end{align}</script><p>化简得</p>
 <script type="math/tex; mode=display">\begin{align} f(x)\equiv f_0(x)-\frac{g(f_0(x))}{g'(f_0(x))}\pmod{x^{2n}} \end{align}</script><p>运用一次该公式即可将 $f(x)$ 的已知项数翻倍。</p>
